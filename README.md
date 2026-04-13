@@ -1,40 +1,103 @@
 # NIT Venue Location
 
+A comprehensive campus navigation and timetable management system for the National Institute of Transport (NIT).
+
 ## Project Overview
 
-This project aims to develop a comprehensive mobile application for the National Institute of Transport (NIT) to automate student timetable management and provide location-based guidance to lecture venues. The system addresses the challenges of navigating a large campus, managing dynamic schedules, and ensuring timely access to accurate information.
+This project aims to develop a mobile application that helps NIT students efficiently navigate campus and manage their academic schedules. The system automates timetable distribution, provides location-based guidance to lecture venues, and integrates real-time notifications for schedule updates.
+
+### Problem Statement
+Students at large campuses like NIT face challenges:
+- Locating lecture venues quickly, especially when new to campus
+- Managing dynamic timetable updates
+- Missing classes due to navigation delays
+
+This application solves these issues with an interactive campus map, one-tap navigation, and offline timetable access.
 
 ## Features
 
-- **Timetable Management**: Centralized database for storing and retrieving student schedules, including course details, timings, and venue assignments.
-- **Venue Location Display**: Interactive map showing all lecture venues on the NIT campus.
-- **Location-Based Navigation**: Provides real-time, step-by-step directions from the user's current location directly to the assigned lecture venue, ensuring an efficient path without requiring users to navigate the entire campus or ask for directions.
-- **Real-Time Notifications**: Push notifications for schedule changes, venue updates, and reminders for upcoming classes.
-- **Offline Support**: Access to timetables and venue information without internet connectivity.
-- **User Roles**: Support for students, lecturers, administrators, and class representatives with role-based access.
-- **Search and Filter**: Advanced search for timetables by course, lecturer, or time.
-- **Venue Booking (Future)**: Optional feature for booking venues (inspired by literature review).
+### MVP (Core)
+- **Timetable Management**: Centralized database for storing student schedules with course details and venue assignments
+- **Venue Location Display**: Interactive Mapbox map showing all lecture venues on campus
+- **Location-Based Navigation**: Real-time, step-by-step directions from current location to assigned lecture venue
+- **Offline Support**: Access to timetables and venue information without internet connectivity
+- **Role-based Access**: Support for students, lecturers, and administrators
+
+#### Phase 2 (Future)
+- **Real-Time Notifications**: Push notifications for schedule changes and venue updates
+- **Advanced Search**: Filter timetables by course, lecturer, or time
+- **Admin Panel**: Interface for managing venues, users, and timetables
+- **Campus Routing**: Compute optimal routes using graph-based pathfinding
 
 ## Tech Stack
 
-### Mobile Application
-- **Framework**: Flutter (Dart) for cross-platform development (iOS and Android).
-- **State Management**: Provider or Riverpod for managing app state.
-- **Maps Integration**: Google Maps SDK for location services and navigation.
-- **Local Storage**: SQLite for offline data persistence.
-- **Notifications**: Firebase Cloud Messaging (FCM) for push notifications.
+### Frontend (Mobile)
+- **Framework**: [Flutter](https://flutter.dev) (Dart) for cross-platform development (iOS & Android)
+- **State Management**: [Riverpod](https://riverpod.dev) for predictable and testable state management
+- **Maps**: [Mapbox SDK](https://www.mapbox.com) for location services and campus navigation
+- **Local Storage**: SQLite for offline data persistence and sync flags
+- **Notifications**: [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) (FCM) for push notifications
 
 ### Backend
-- **Framework**: Node.js with Express.js for RESTful API development.
-- **Authentication**: JWT (JSON Web Tokens) for secure user authentication.
-- **Database**: PostgreSQL for online data storage, with synchronization to mobile SQLite.
-- **Real-Time Features**: Socket.io for real-time updates (optional for notifications).
+- **Runtime**: [Node.js](https://nodejs.org) (v16+) with [Express.js](https://expressjs.com)
+- **Authentication**: JWT (JSON Web Tokens) for stateless authentication
+- **Database**: [PostgreSQL](https://www.postgresql.org) (v13+) for persistent data storage
+- **Real-Time** (Optional): [Socket.io](https://socket.io) for future real-time features
 
-### Additional Tools
-- **Version Control**: Git
-- **CI/CD**: GitHub Actions for automated testing and deployment.
-- **Testing**: Flutter Test for unit tests, Integration tests for UI, and Postman for API testing.
-- **Documentation**: Swagger for API documentation.
+### DevOps & Tooling
+- **Version Control**: Git / GitHub
+- **CI/CD**: GitHub Actions for automated testing and deployment
+- **Testing**: 
+  - Flutter Test for unit & widget tests
+  - Jest for backend unit tests
+  - Postman for API integration testing
+- **API Documentation**: Swagger/OpenAPI
+- **Container**: Docker for consistent development environments
+
+## Repository Structure
+
+```
+ramani/                    
+├── backend/                     # Node.js + Express REST API (to be created)
+│   ├── src/
+│   ├── tests/
+│   ├── package.json
+│   └── .env.example
+├── mobile/                      # Flutter mobile application (to be created)
+│   ├── lib/
+│   ├── test/
+│   ├── android/
+│   ├── ios/
+│   └── pubspec.yaml
+├── docs/                        # Additional documentation (optional)
+|    ├── API.md                  # API specification details
+|    └── SETUP.md                # Detailed setup instructions
+└── README.md                    # Project documentation (this file)  
+
+```
+
+## Quick Start
+
+This is a design-phase project. To contribute or understand the architecture:
+
+1. **Read the documentation**:
+   - Review [README.md](README.md) (this file) for overview
+   - Check [diagrams/flowchart.md](diagrams/flowchart.md) for system flow
+   - Check [diagrams/usecase.md](diagrams/usecase.md) for user scenarios
+
+2. **Set up development environment** (once code is available):
+   ```bash
+   git clone https://github.com/[org]/ramani.git
+   cd ramani
+   
+   # Backend
+   cd backend && npm install && npm run dev
+   
+   # Mobile (separate terminal)
+   cd mobile && flutter pub get && flutter run
+   ```
+
+3. **Contribute**: See [Contributing](#contributing) section below
 
 ## Architecture
 
@@ -45,7 +108,7 @@ graph TD
     A[Mobile App (Flutter)] --> B[Backend API (Node.js)]
     A --> C[Local SQLite DB]
     B --> D[PostgreSQL DB]
-    A --> E[Google Maps API]
+    A --> E[Mapbox API]
     A --> F[Firebase Cloud Messaging]
     B --> F
 ```
@@ -54,7 +117,7 @@ graph TD
 - **Mobile App**: Handles UI, user interactions, offline data, and integrates with maps and notifications.
 - **Backend API**: Manages data synchronization, authentication, and business logic.
 - **Database**: PostgreSQL for centralized data; SQLite for local caching on device.
-- **External Services**: Google Maps for navigation, Firebase for notifications.
+- **External Services**: Mapbox for navigation, Firebase for notifications.
 
 ## Dynamic Campus Map Data
 
@@ -67,7 +130,7 @@ The campus map data is designed to be **dynamic and data-driven** so that adding
 
 ### 2) Load markers dynamically (Database → API → App → Map)
 - The mobile app loads venue data from the backend API (`GET /api/venues`).
-- The app displays each venue as a map marker in Mapbox (or Google Maps).
+- The app displays each venue as a map marker in Mapbox.
 - No hard-coded buildings in the app; new venues appear instantly after the database is updated.
 
 ### 3) Admin panel for managing campus data
@@ -183,90 +246,299 @@ Mirrors the PostgreSQL schema for offline access, with additional sync flags.
 
 ## Installation and Setup
 
-### Prerequisites
-- Flutter SDK (version 3.0+)
-- Node.js (version 16+)
-- PostgreSQL (version 13+)
-- Google Maps API Key
-- Firebase Project Setup
+> **Note**: This project is in the design phase. Setup instructions below are for when development begins. For now, focus on reviewing the architecture and design documents.
 
-### Backend Setup
-1. Clone the repository: `git clone <repo-url>`
-2. Navigate to backend directory: `cd backend`
-3. Install dependencies: `npm install`
-4. Set up environment variables (create `.env` file):
-   ```
-   DATABASE_URL=postgresql://user:password@localhost:5432/nit_timetable
-   JWT_SECRET=your-secret-key
-   GOOGLE_MAPS_API_KEY=your-api-key
-   FIREBASE_SERVER_KEY=your-firebase-key
-   ```
-5. Run database migrations: `npm run migrate`
-6. Start the server: `npm start`
+### Prerequisites (Once Development Begins)
+- **Flutter SDK** v3.0+ (for mobile development)
+- **Node.js** v16+ (for backend)
+- **PostgreSQL** v13+ (for database)
+- **Mapbox Access Token** (create at [mapbox.com](https://www.mapbox.com))
+- **Firebase Project** (create at [firebase.google.com](https://firebase.google.com))
+- **Git** for version control
 
-### Mobile App Setup
-1. Navigate to mobile directory: `cd mobile`
-2. Install dependencies: `flutter pub get`
-3. Configure API endpoints in `lib/config.dart`
-4. Add Google Maps API key to `android/app/src/main/AndroidManifest.xml` and `ios/Runner/AppDelegate.swift`
-5. Set up Firebase: Add `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
-6. Run the app: `flutter run`
+### Environment Setup
 
-### Database Setup
-- Create PostgreSQL database: `createdb nit_timetable`
-- Run initial seed data if available.
+#### Backend Setup
+```bash
+git clone https://github.com/[org]/ramani.git
+cd ramani/backend
 
-## Usage
+# Install dependencies
+npm install
 
-### For Students
-1. Login with student credentials.
-2. View personal timetable on the dashboard.
-3. Tap on a class to view venue details and get directions.
-4. Receive notifications for schedule changes.
+# Create .env file with required variables
+cp .env.example .env
 
-### For Lecturers
-1. Login and view assigned courses.
-2. Update timetable if changes occur.
-3. Access venue information.
+# Edit .env with your credentials:
+# DATABASE_URL=postgresql://user:password@localhost:5432/nit_timetable
+# JWT_SECRET=your-secret-key
+# MAPBOX_ACCESS_TOKEN=your-token
+# FIREBASE_SERVER_KEY=your-key
 
-### For Administrators
-1. Manage users, venues, and timetables.
-2. Send bulk notifications.
-3. Monitor system usage.
+# Run migrations
+npm run migrate
 
-## Testing
+# Start development server
+npm run dev
+```
 
-### Unit Tests
-- Run Flutter tests: `flutter test`
-- Run backend tests: `npm test`
+#### Mobile App Setup
+```bash
+cd ramani/mobile
 
-### Integration Tests
-- Use Flutter integration tests for UI flows.
-- Test API endpoints with Postman collections.
+# Get dependencies
+flutter pub get
 
-### Manual Testing
-- Test offline functionality by disabling internet.
-- Verify navigation accuracy on campus.
-- Check notification delivery.
+# Create lib/config.dart with API endpoint configuration
+# See docs/SETUP.md for detailed configuration
 
-## Deployment
+# Configure Firebase
+# - Download google-services.json (Android)
+# - Download GoogleService-Info.plist (iOS)
 
-### Mobile App
-- Build for Android: `flutter build apk`
-- Build for iOS: `flutter build ios`
-- Distribute via Google Play Store and Apple App Store.
+# Run on emulator/device
+flutter run
+```
 
-### Backend
-- Deploy to cloud platforms like Heroku, AWS, or DigitalOcean.
-- Use Docker for containerization.
+#### Database Setup
+```bash
+# Create PostgreSQL database
+createdb nit_timetable
+
+# Apply initial schema (migrations)
+cd ../backend && npm run migrate
+```
+
+### Configuration Files
+
+Key configuration templates:
+- `backend/.env.example` - Backend environment variables
+- `mobile/lib/config.dart` - API endpoints and Mapbox token
+- Database migrations in `backend/migrations/`
+- Firebase configuration in `mobile/ios/` and `mobile/android/`
+
+## User Workflows (Planned)
+
+### Student Workflow
+1. Download app from Google Play / App Store
+2. Login with NIT credentials
+3. View personal timetable on dashboard
+4. Tap on a class to see:
+   - Venue details (building, room, capacity)
+   - Distance from current location
+   - Weather at venue
+5. Tap "Get Directions" to launch campus navigation
+6. Receive push notifications for schedule changes
+
+### Lecturer Workflow
+1. Login with lecturer credentials
+2. View assigned courses and timetable
+3. Edit or update timetable (if authorized)
+4. Access venue information and student roster
+
+### Administrator Workflow
+1. Access admin panel (web-based)
+2. Manage user accounts and roles
+3. Add/edit/delete venues and buildings
+4. Update timetables in bulk
+5. Send notifications to students/lecturers
+6. View usage analytics and reports
+
+## Development Workflow
+
+### Setting Up for Contribution
+
+```bash
+# Clone the repository
+git clone https://github.com/[org]/ramani.git
+cd ramani
+
+# Create a feature branch
+git checkout -b feature/your-feature-name
+
+# Backend development
+cd backend
+npm install
+npm run dev
+
+# Mobile development (separate terminal)
+cd mobile
+flutter pub get
+flutter run
+```
+
+### Code Management
+
+- **Main branch**: Production-ready code
+- **Develop branch**: Integration branch for features
+- **Feature branches**: `feature/feature-name`
+- **Bugfix branches**: `bugfix/issue-name`
+
+### Testing Strategy
+
+Once code is available:
+
+#### Backend Tests
+```bash
+cd backend
+npm test                    # Run unit tests
+npm run test:integration   # Run integration tests
+npm run test:coverage      # Generate coverage report
+```
+
+#### Mobile Tests
+```bash
+cd mobile
+flutter test                           # Unit tests
+flutter drive --target=test_driver/app.dart  # Integration tests
+```
+
+#### Manual Testing Checklist
+- [ ] Offline data sync after reconnection
+- [ ] Navigation accuracy from various campus locations
+- [ ] Firebase notification delivery
+- [ ] Role-based access control
+- [ ] API response time under load
+
+## Deployment Pipeline
+
+> **Status**: To be implemented with GitHub Actions
+
+### Staged Deployment
+
+1. **Develop** → Run tests → Deploy to staging
+2. **Staging** → Approval required → Deploy to production
+3. **Production** → Available on Play Store / App Store
+
+### Build Commands
+
+```bash
+# Backend (Docker)
+cd backend
+docker build -t ramani-api:latest .
+docker tag ramani-api:latest gcr.io/[project]/ramani-api:latest
+docker push gcr.io/[project]/ramani-api:latest
+
+# Mobile - Android
+cd mobile
+flutter build apk --split-per-abi
+
+# Mobile - iOS
+cd mobile
+flutter build ios --release
+```
 
 ## Contributing
 
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -m 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Create a Pull Request.
+Thank you for your interest in contributing! Here's how to get involved:
+
+### Getting Started
+
+1. **Review the documentation**:
+   - Understand the architecture from diagrams/
+   - Read the API specification
+   - Check existing issues/PRs
+
+2. **Set up your development environment**:
+   - Follow the [Installation and Setup](#installation-and-setup) section
+   - Verify all tests pass locally
+
+3. **Pick an issue**:
+   - Look for issues tagged `good-first-issue`
+   - Check project board for priority items
+   - Comment on the issue to express interest
+
+### Development Process
+
+1. **Create a feature branch**:
+   ```bash
+   git checkout develop
+   git pull origin develop
+   git checkout -b feature/descriptive-name
+   ```
+
+2. **Code with best practices**:
+   - Follow language/framework conventions
+   - Write tests for new functionality
+   - Keep commits atomic and well-described
+   - Reference issue numbers in commit messages: `git commit -m "Fix auth flow (closes #42)"`
+
+3. **Push and create Pull Request**:
+   ```bash
+   git push origin feature/descriptive-name
+   ```
+
+4. **Code Review**:
+   - Address feedback from maintainers
+   - Participate in discussion
+   - Update PR based on reviewer comments
+
+5. **Merge**:
+   - Squash commits if requested
+   - Merge to `develop` branch
+   - Delete feature branch after merge
+
+### Code Style
+
+- **Backend**: Use ESLint configuration in `backend/.eslintrc`
+- **Mobile**: Use Dart lint rules defined in `mobile/analysis_options.yaml`
+- **Commits**: Use conventional commits format (`feat:`, `fix:`, `docs:`, `refactor:`)
+
+### Reporting Issues
+
+Please include:
+- Clear description of the bug/feature
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Environment details (OS, DevTools versions, etc.)
+- Screenshots/logs if applicable
+
+## Project Roadmap
+
+### Q2 2026 (Current)
+- ✅ Architecture & design phase
+- ⏳ Backend API development
+- ⏳ Database schema implementation
+
+### Q3 2026
+- Flutter mobile app scaffolding
+- API integration
+- Offline data sync implementation
+- Firebase setup
+
+### Q4 2026
+- MVP testing
+- Beta release to NIT
+- Feedback collection
+
+### Q1 2027
+- Admin panel development
+- Advanced routing features
+- Performance optimization
+- App Store release
+
+## License
+
+This project is licensed under the [MIT License](LICENSE) - see file for details.
+
+## Contact & Support
+
+- **Project Lead**: [Your Name] ([email](mailto:your-email@example.com))
+- **Issues & Discussions**: [GitHub Issues](https://github.com/[org]/ramani/issues)
+- **Documentation**: Check `/docs` folder for detailed guides
+- **Slack/Chat**: [Link to project chat]
+
+## Acknowledgments
+
+- NIT administration for project support
+- Flutter and Dart communities
+- Mapbox for location services
+- Firebase for backend services
+
+---
+
+**Last Updated**: April 2026  
+**Repository**: https://github.com/[org]/ramani
 
 ### Code Style
 - Follow Flutter/Dart style guide.
