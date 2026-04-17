@@ -4,30 +4,36 @@ A comprehensive campus navigation and timetable management system for the Nation
 
 ## Project Overview
 
-This project aims to develop a mobile application that helps NIT students efficiently navigate campus and manage their academic schedules. The system automates timetable distribution, provides location-based guidance to lecture venues, and integrates real-time notifications for schedule updates.
+This project develops a mobile application that serves as a comprehensive campus navigation system for the National Institute of Transport (NIT). The core functionality allows users to navigate to any campus location they don't know, with timetables providing additional reminders and one-click access to scheduled venues.
 
 ### Problem Statement
-Students at large campuses like NIT face challenges:
-- Locating lecture venues quickly, especially when new to campus
-- Managing dynamic timetable updates
-- Missing classes due to navigation delays
+Students and staff at large campuses like NIT face challenges:
+- Finding unfamiliar locations across campus
+- Navigating between buildings efficiently
+- Missing scheduled classes due to poor navigation
+- Managing time-sensitive academic schedules
 
-This application solves these issues with an interactive campus map, one-tap navigation, and offline timetable access.
+This application solves these issues with an interactive campus map for general navigation, plus integrated timetable reminders for academic scheduling.
 
 ## Features
 
-### MVP (Core)
-- **Timetable Management**: Centralized database for storing student schedules with course details and venue assignments
-- **Venue Location Display**: Interactive Mapbox map showing all lecture venues on campus
-- **Location-Based Navigation**: Real-time, step-by-step directions from current location to assigned lecture venue
-- **Offline Support**: Access to timetables and venue information without internet connectivity
-- **Role-based Access**: Support for students, lecturers, and administrators
+### Core Navigation (Always Available)
+- **Campus Map Navigation**: Interactive Mapbox map showing all campus venues and buildings
+- **Location Search & Discovery**: Find any venue by name, type, or category (lecture halls, offices, labs, shops, cafes, libraries, etc.)
+- **Real-Time Directions**: Step-by-step navigation from current location to any selected venue
+- **Offline Venue Data**: Access to venue information and basic maps without internet
+
+### Timetable Integration (When Available)
+- **Schedule Reminders**: Push notifications as class times approach
+- **One-Click Navigation**: Tap timetable entry to instantly navigate to the venue
+- **Timetable Management**: View and sync academic schedules with venue locations
+- **Role-Based Access**: Support for students, lecturers, and administrators
 
 #### Phase 2 (Future)
-- **Real-Time Notifications**: Push notifications for schedule changes and venue updates
-- **Advanced Search**: Filter timetables by course, lecturer, or time
+- **Advanced Search**: Filter venues by type, building, or amenities
 - **Admin Panel**: Interface for managing venues, users, and timetables
-- **Campus Routing**: Compute optimal routes using graph-based pathfinding
+- **Campus Routing**: Optimal pathfinding between multiple locations
+- **Real-Time Notifications**: Schedule changes and venue updates
 
 ## Tech Stack
 
@@ -57,24 +63,129 @@ This application solves these issues with an interactive campus map, one-tap nav
 ## Repository Structure
 
 ```
-ramani/                    
-├── backend/                     # Node.js + Express REST API (to be created)
+ramani/
+├── README.md                    # Project documentation
+├── .gitignore                   # Git ignore rules
+├── .env.example                 # Environment template (root level)
+├── docker-compose.yml           # Local PostgreSQL + Redis setup
+├── LICENSE                      # MIT License
+│
+├── diagrams/                    # Architecture & design documentation
+│   ├── flowchart.md            # System flow diagrams
+│   └── usecase.md              # Use case diagrams
+│
+├── docs/                        # Project documentation
+│   ├── API.md                  # REST API specification
+│   ├── DATABASE.md             # Database schema & queries
+│   ├── ARCHITECTURE.md         # Design decisions & patterns
+│   └── SETUP.md                # Detailed setup instructions
+│
+├── backend/                     # Node.js + Express REST API
 │   ├── src/
+│   │   ├── config/             # Configuration (database, JWT, etc.)
+│   │   ├── controllers/        # Route handlers
+│   │   ├── models/             # Database models & schemas
+│   │   ├── services/           # Business logic
+│   │   ├── middleware/         # Authentication, validation, error handling
+│   │   ├── routes/             # API route definitions
+│   │   ├── utils/              # Helper functions
+│   │   ├── validators/         # Input validation schemas
+│   │   └── app.js              # Express app setup
+│   ├── migrations/             # Database migration scripts
+│   ├── seeds/                  # Database seed data
 │   ├── tests/
+│   │   ├── unit/               # Unit tests
+│   │   └── integration/        # API integration tests
+│   ├── .env.example            # Backend environment template
 │   ├── package.json
-│   └── .env.example
-├── mobile/                      # Flutter mobile application (to be created)
+│   ├── Dockerfile              # Container image
+│   └── README.md               # Backend-specific setup
+│
+├── mobile/                      # Flutter mobile application
 │   ├── lib/
+│   │   ├── features/           # Feature modules (feature-based architecture)
+│   │   │   ├── auth/
+│   │   │   │   ├── data/
+│   │   │   │   ├── domain/
+│   │   │   │   └── presentation/
+│   │   │   ├── timetable/
+│   │   │   │   ├── data/
+│   │   │   │   ├── domain/
+│   │   │   │   └── presentation/
+│   │   │   ├── venues/
+│   │   │   │   ├── data/
+│   │   │   │   ├── domain/
+│   │   │   │   └── presentation/
+│   │   │   ├── notifications/
+│   │   │   │   ├── data/
+│   │   │   │   ├── domain/
+│   │   │   │   └── presentation/
+│   │   │   └── navigation/
+│   │   │       └── presentation/
+│   │   ├── core/               # Shared code
+│   │   │   ├── models/         # Shared data models
+│   │   │   ├── services/       # API client, storage, notifications
+│   │   │   ├── utils/          # Utilities & constants
+│   │   │   ├── theme/          # App theme & colors
+│   │   │   └── errors/         # Error handling
+│   │   ├── widgets/            # Reusable UI components
+│   │   ├── main.dart
+│   │   └── config.dart         # Configuration (API endpoints, Mapbox token)
 │   ├── test/
+│   │   ├── features/           # Feature-specific tests
+│   │   └── unit/               # Unit tests
 │   ├── android/
 │   ├── ios/
-│   └── pubspec.yaml
-├── docs/                        # Additional documentation (optional)
-|    ├── API.md                  # API specification details
-|    └── SETUP.md                # Detailed setup instructions
-└── README.md                    # Project documentation (this file)  
-
+│   ├── pubspec.yaml
+│   ├── analysis_options.yaml   # Lint rules
+│   └── README.md               # Mobile-specific setup
+│
+├── admin/                       # Admin panel (web-based, optional)
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── README.md               # Admin-specific setup
+│
+└── .github/
+    ├── workflows/
+    │   ├── backend-ci.yml      # Backend tests & deployment
+    │   ├── mobile-ci.yml       # Flutter builds
+    │   └── deploy.yml          # Production deployment
+    └── ISSUE_TEMPLATE/
+        ├── bug_report.md
+        └── feature_request.md
 ```
+
+### Directory Explanations
+
+**Backend (`src/` organization)**
+- `config/`: Database connections, JWT secrets, environment variables
+- `controllers/`: HTTP request handlers (auth, timetables, venues, notifications)
+- `models/`: Database models (User, Timetable, Venue, Course, Lecturer)
+- `services/`: Business logic (timetable sync, venue queries, notification dispatch)
+- `middleware/`: Authentication (verifyToken), input validation, error handling
+- `routes/`: Route definitions (auth routes, admin routes, user routes)
+
+**Mobile (Feature-based architecture)**
+- Each feature has `data/`, `domain/`, `presentation/` (Clean Architecture)
+- `data/`: Local storage (Hive/SQLite), API calls
+- `domain/`: Business logic, entities, repositories
+- `presentation/`: UI screens, state management (Riverpod), widgets
+
+**Migrations & Seeds**
+- `backend/migrations/`: SQL scripts for schema versioning
+- `backend/seeds/`: Sample course, venue, and user data for testing
+
+**CI/CD**
+- `.github/workflows/`: GitHub Actions for testing and deployment
+- Includes linting, unit tests, integration tests, and build steps
+
+### Key Files to Create at Project Start
+
+1. **Root level**: `.gitignore`, `.env.example`, `docker-compose.yml`, `LICENSE`
+2. **Backend**: `backend/src/app.js`, `backend/.env.example`, `backend/Dockerfile`
+3. **Mobile**: `mobile/lib/main.dart`, `mobile/lib/config.dart`, `mobile/pubspec.yaml`
+4. **Docs**: `docs/API.md`, `docs/DATABASE.md`, `docs/ARCHITECTURE.md`
 
 ## Quick Start
 
@@ -168,22 +279,84 @@ This design supports future expansion: adding new buildings or paths does not re
 
 ## Database Schema
 
-### PostgreSQL Schema
+The database schema is fully documented in [docs/DATABASE.md](docs/DATABASE.md), which includes detailed table definitions, relationships, constraints, and sample data.
+
+### Core Entities
+
+The system uses PostgreSQL with the following main entities:
+
+- **USERS**: Students, lecturers, and administrators with role-based access
+- **DEPARTMENTS**: Organizational units at NIT
+- **COURSES**: Academic courses with lecturer assignments
+- **VENUES**: All campus locations (lecture halls, offices, labs, shops, cafes, libraries, etc.) with GPS coordinates
+- **TIMETABLES**: Links users to courses and venues with scheduling details
+- **NOTIFICATIONS**: System notifications for schedule changes and updates
+- **DEVICES**: Mobile device tracking for push notifications
+- **SYNC_LOGS**: Tracks mobile app data synchronization
+
+### Key Features
+
+- **Unified Venues Table**: Represents the entire campus hierarchy (buildings, rooms, facilities)
+- **Role-Based Users**: Lecturer-specific fields like specialization (optional)
+- **GPS Integration**: Latitude/longitude for Mapbox navigation
+- **Offline Support**: Sync logs for mobile app synchronization
+- **Flexible Venue Types**: Lecture halls, offices, labs, shops, cafes, libraries, auditoriums, facilities, admin offices, and other campus locations
+
+### Entity-Relationship Overview
 
 ```mermaid
 erDiagram
     USERS ||--o{ TIMETABLES : has
-    USERS ||--o{ VENUES : manages
-    TIMETABLES ||--o{ COURSES : includes
+    USERS ||--o{ DEVICES : registers
+    COURSES ||--o{ TIMETABLES : scheduled_to
+    COURSES ||--o{ USERS : taught_by
     VENUES ||--o{ TIMETABLES : assigned_to
-    COURSES ||--o{ LECTURERS : taught_by
+    VENUES ||--o{ USERS : has_office
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ SYNC_LOGS : tracks
 
     USERS {
         int id PK
-        string name
-        string email
-        string role
+        string email UK
         string password_hash
+        string full_name
+        enum role "student|lecturer|admin"
+        string phone
+        int department_id FK
+        string office_location
+        string specialization
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    COURSES {
+        int id PK
+        string code UK
+        string name
+        text description
+        int credit_hours
+        int lecturer_id FK
+        int department_id FK
+        int capacity
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    VENUES {
+        int id PK
+        string name UK
+        string building
+        string room_number
+        float latitude
+        float longitude
+        enum venue_type
+        int capacity
+        string description
+        int assigned_user_id FK
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
     TIMETABLES {
@@ -191,36 +364,49 @@ erDiagram
         int user_id FK
         int course_id FK
         int venue_id FK
-        datetime start_time
-        datetime end_time
-        date date
+        string day_of_week
+        time start_time
+        time end_time
+        date date_from
+        date date_to
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
-    VENUES {
+    NOTIFICATIONS {
         int id PK
-        string name
-        string location
-        float latitude
-        float longitude
-        string description
+        int user_id FK
+        string title
+        text message
+        string type
+        boolean is_read
+        timestamp created_at
     }
 
-    COURSES {
+    DEVICES {
         int id PK
-        string name
-        string code
-        int lecturer_id FK
+        int user_id FK
+        string device_name
+        string device_id UK
+        enum platform "iOS|Android"
+        string fcm_token
+        boolean is_active
+        timestamp created_at
     }
 
-    LECTURERS {
+    SYNC_LOGS {
         int id PK
-        string name
-        string department
+        int user_id FK
+        timestamp last_sync
+        int synced_records
+        string status
+        text error_message
+        timestamp created_at
     }
 ```
 
-### SQLite Schema (Mobile)
-Mirrors the PostgreSQL schema for offline access, with additional sync flags.
+For complete table definitions, indexes, constraints, and sample data, see [docs/DATABASE.md](docs/DATABASE.md).
 
 ## API Endpoints
 
@@ -556,7 +742,3 @@ This project is licensed under the [MIT License](LICENSE) - see file for details
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## References
-
-- Arinaitwe, M. (2011). Automated management systems. Kampala International University.
-- Vijayalakshmi, B., Arthi, D., Pragna, B., Deekshitha, D. S., & Pooja Sree, B. V. S. (2024). Campus Venue and Equipment Booking System. International Journal of Research in Engineering, IT and Social Sciences, 14(06), 97–104.
