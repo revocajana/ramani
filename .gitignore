@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.python-version
+
+# Virtualenv
+venv/
+.env
+.env.*
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# Django migrations
+**/migrations/__pycache__/
+**/migrations/*.pyc
+**/migrations/*.py[cod]
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Flutter
+**/build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+.idea/
+.vscode/
+
+# IntelliJ / PyCharm
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Mac
+.DS_Store
+
+# Logs and databases
+debug.log
+*.sqlite3
+
+# IDE files
+*.swp
+*~
+
+# Generated docs
+docs/_build/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.test
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# Celery
+celerybeat-schedule
+
+# System files
+Thumbs.db
