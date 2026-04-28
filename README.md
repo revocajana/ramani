@@ -45,17 +45,17 @@ This application solves these issues with an interactive campus map for general 
 - **Notifications**: [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) (FCM) for push notifications
 
 ### Backend
-- **Runtime**: [Node.js](https://nodejs.org) (v16+) with [Express.js](https://expressjs.com)
-- **Authentication**: JWT (JSON Web Tokens) for stateless authentication
+- **Framework**: [Django](https://www.djangoproject.com) (Python) with [Django REST Framework](https://www.django-rest-framework.org)
+- **Authentication**: JWT (JSON Web Tokens) or Django's built-in authentication
 - **Database**: [PostgreSQL](https://www.postgresql.org) (v13+) for persistent data storage
-- **Real-Time** (Optional): [Socket.io](https://socket.io) for future real-time features
+- **Real-Time** (Optional): [Django Channels](https://channels.readthedocs.io) for future real-time features
 
 ### DevOps & Tooling
 - **Version Control**: Git / GitHub
 - **CI/CD**: GitHub Actions for automated testing and deployment
 - **Testing**: 
   - Flutter Test for unit & widget tests
-  - Jest for backend unit tests
+  - Django Test Framework for backend unit & integration tests
   - Postman for API integration testing
 - **API Documentation**: Swagger/OpenAPI
 - **Container**: Docker for consistent development environments
@@ -80,7 +80,7 @@ ramani/
 │   ├── ARCHITECTURE.md         # Design decisions & patterns
 │   └── SETUP.md                # Detailed setup instructions
 │
-├── backend/                     # Node.js + Express REST API
+├── backend/                     # Django REST API
 │   ├── src/
 │   │   ├── config/             # Configuration (database, JWT, etc.)
 │   │   ├── controllers/        # Route handlers
@@ -90,14 +90,14 @@ ramani/
 │   │   ├── routes/             # API route definitions
 │   │   ├── utils/              # Helper functions
 │   │   ├── validators/         # Input validation schemas
-│   │   └── app.js              # Express app setup
+│   │   └── settings.py          # Django settings and configuration
 │   ├── migrations/             # Database migration scripts
 │   ├── seeds/                  # Database seed data
 │   ├── tests/
 │   │   ├── unit/               # Unit tests
 │   │   └── integration/        # API integration tests
 │   ├── .env.example            # Backend environment template
-│   ├── package.json
+│   ├── requirements.txt
 │   ├── Dockerfile              # Container image
 │   └── README.md               # Backend-specific setup
 │
@@ -216,7 +216,7 @@ The system follows a client-server architecture with offline capabilities.
 
 ```mermaid
 graph TD
-    A[Mobile App (Flutter)] --> B[Backend API (Node.js)]
+    A[Mobile App (Flutter)] --> B[Backend API (Django)]
     A --> C[Local SQLite DB]
     B --> D[PostgreSQL DB]
     A --> E[Mapbox API]
@@ -436,7 +436,7 @@ For complete table definitions, indexes, constraints, and sample data, see [docs
 
 ### Prerequisites (Once Development Begins)
 - **Flutter SDK** v3.0+ (for mobile development)
-- **Node.js** v16+ (for backend)
+- **Python** 3.8+ with **Django** 4.0+ (for backend)
 - **PostgreSQL** v13+ (for database)
 - **Mapbox Access Token** (create at [mapbox.com](https://www.mapbox.com))
 - **Firebase Project** (create at [firebase.google.com](https://firebase.google.com))
@@ -728,7 +728,7 @@ This project is licensed under the [MIT License](LICENSE) - see file for details
 
 ### Code Style
 - Follow Flutter/Dart style guide.
-- Use ESLint for JavaScript/Node.js.
+- Use Black and Flake8 for Python/Django code formatting and linting.
 - Write descriptive commit messages.
 
 ## Future Enhancements
