@@ -66,38 +66,42 @@ This application solves these issues with an interactive campus map for general 
 ramani/
 ├── README.md                    # Project documentation
 ├── .gitignore                   # Git ignore rules
-├── .env.example                 # Environment template (root level)
-├── docker-compose.yml           # Local PostgreSQL + Redis setup
+├── .env                         # Environment variables (database, secrets)
 ├── LICENSE                      # MIT License
-│
-├── diagrams/                    # Architecture & design documentation
-│   ├── flowchart.md            # System flow diagrams
-│   └── usecase.md              # Use case diagrams
 │
 ├── docs/                        # Project documentation
 │   ├── API.md                  # REST API specification
 │   ├── DATABASE.md             # Database schema & queries
-│   ├── ARCHITECTURE.md         # Design decisions & patterns
-│   └── SETUP.md                # Detailed setup instructions
+│   └── ARCHITECTURE.md         # Design decisions & patterns
 │
 ├── backend/                     # Django REST API
-│   ├── src/
-│   │   ├── config/             # Configuration (database, JWT, etc.)
-│   │   ├── controllers/        # Route handlers
-│   │   ├── models/             # Database models & schemas
-│   │   ├── services/           # Business logic
-│   │   ├── middleware/         # Authentication, validation, error handling
-│   │   ├── routes/             # API route definitions
-│   │   ├── utils/              # Helper functions
-│   │   ├── validators/         # Input validation schemas
-│   │   └── settings.py          # Django settings and configuration
-│   ├── migrations/             # Database migration scripts
-│   ├── seeds/                  # Database seed data
-│   ├── tests/
-│   │   ├── unit/               # Unit tests
-│   │   └── integration/        # API integration tests
-│   ├── .env.example            # Backend environment template
-│   ├── requirements.txt
+│   ├── ramani/                 # Django project settings
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py         # Django settings and configuration
+│   │   ├── urls.py             # Main URL configuration
+│   │   └── wsgi.py
+│   ├── apps/                   # Django apps
+│   │   ├── users/              # User management & authentication
+│   │   ├── departments/        # Department management
+│   │   ├── venues/             # Venue/location management
+│   │   ├── courses/            # Course management
+│   │   ├── timetables/         # Timetable management
+│   │   ├── notifications/      # Notification system
+│   │   ├── devices/            # Device management
+│   │   └── sync_logs/          # Synchronization logs
+│   ├── sample/                 # Sample data scripts
+│   │   └── populate_data.py    # Database seeding script
+│   ├── manage.py               # Django management script
+│   ├── requirements.txt        # Python dependencies
+│   └── README.md               # Backend-specific setup
+│
+├── mobile/                      # Flutter mobile application (planned)
+│   └── README.md               # Mobile-specific setup (planned)
+│
+└── vee/                        # Python virtual environment
+    └── ...                     # Virtual environment files
+```
 │   ├── Dockerfile              # Container image
 │   └── README.md               # Backend-specific setup
 │
@@ -189,26 +193,61 @@ ramani/
 
 ## Quick Start
 
-This is a design-phase project. To contribute or understand the architecture:
+### Prerequisites
+- Python 3.8+
+- PostgreSQL 13+
+- Flutter SDK (for mobile development)
 
-1. **Read the documentation**:
-   - Review [README.md](README.md) (this file) for overview
-   - Check [diagrams/flowchart.md](diagrams/flowchart.md) for system flow
-   - Check [diagrams/usecase.md](diagrams/usecase.md) for user scenarios
+### Backend Setup
 
-2. **Set up development environment** (once code is available):
+1. **Clone and navigate to backend**:
    ```bash
    git clone https://github.com/[org]/ramani.git
-   cd ramani
-   
-   # Backend
-   cd backend && npm install && npm run dev
-   
-   # Mobile (separate terminal)
-   cd mobile && flutter pub get && flutter run
+   cd ramani/backend
    ```
 
-3. **Contribute**: See [Contributing](#contributing) section below
+2. **Create virtual environment**:
+   ```bash
+   python -m venv ../vee
+   source ../vee/bin/activate  # On Windows: ../vee/Scripts/activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**:
+   ```bash
+   cp .env.example .env  # Copy template
+   # Edit .env with your database credentials
+   ```
+
+5. **Run migrations**:
+   ```bash
+   python manage.py migrate
+   ```
+
+6. **Create superuser**:
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. **Populate sample data** (optional):
+   ```bash
+   python sample/populate_data.py
+   ```
+
+8. **Start development server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+The backend will be available at `http://localhost:8000`.
+
+### Mobile Setup (Coming Soon)
+
+Flutter mobile app setup instructions will be added once development begins.
 
 ## Architecture
 
@@ -216,7 +255,7 @@ The system follows a client-server architecture with offline capabilities.
 
 ```mermaid
 graph TD
-    A[Mobile App (Flutter)] --> B[Backend API (Django)]
+    A[Mobile App (Flutter)] --> B[Backend API (Django REST Framework)]
     A --> C[Local SQLite DB]
     B --> D[PostgreSQL DB]
     A --> E[Mapbox API]
@@ -226,7 +265,7 @@ graph TD
 
 ### Component Descriptions
 - **Mobile App**: Handles UI, user interactions, offline data, and integrates with maps and notifications.
-- **Backend API**: Manages data synchronization, authentication, and business logic.
+- **Backend API**: Django REST Framework manages data synchronization, authentication, and business logic.
 - **Database**: PostgreSQL for centralized data; SQLite for local caching on device.
 - **External Services**: Mapbox for navigation, Firebase for notifications.
 

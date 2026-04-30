@@ -14,8 +14,8 @@ This is the Django REST API backend for the NIT Venue Location system.
 1. **Create virtual environment:**
    ```bash
    cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv ../vee
+   source ../vee/bin/activate  # On Windows: ..\vee\Scripts\activate
    ```
 
 2. **Install dependencies:**
@@ -76,3 +76,17 @@ Authorization: Bearer <your-jwt-token>
 ## Admin Panel
 
 Access the Django admin panel at `http://localhost:8000/admin/` to manage data.
+
+## Populate Sample Data
+
+A sample data script is available at `backend/sample/populate_data.py`.
+
+Run it from the backend folder with your virtual environment active:
+
+```bash
+cd backend
+source ../vee/bin/activate  # Activate virtual environment
+python sample/populate_data.py
+```
+
+This will create sample departments, users, venues, courses, timetables, notifications, devices, and sync logs.
