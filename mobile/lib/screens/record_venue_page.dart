@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants.dart';
 
 class RecordVenuePage extends StatefulWidget {
-  const RecordVenuePage({Key? key}) : super(key: key);
+  final dynamic venue; // Optional: If provided, the page is in "Edit" mode.
+  const RecordVenuePage({Key? key, this.venue}) : super(key: key);
 
   @override
   State<RecordVenuePage> createState() => _RecordVenuePageState();
@@ -35,6 +36,21 @@ class _RecordVenuePageState extends State<RecordVenuePage> {
     {'value': 'computer_lab', 'label': 'Computer Lab'},
     {'value': 'other', 'label': 'Other'},
   ];
+
+  bool get _isEditing => widget.venue != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      _nameController.text = widget.venue['name'] ?? '';
+      _buildingController.text = widget.venue['building'] ?? '';
+      _descriptionController.text = widget.venue['description'] ?? '';
+      _venueType = widget.venue['venue_type'] ?? 'lecture_hall';
+      _latitude = double.tryParse(widget.venue['latitude'].toString());
+      _longitude = double.tryParse(widget.venue['longitude'].toString());
+    }
+  }
 
   Future<void> _getCurrentLocation() async {
     setState(() => _gettingLocation = true);
@@ -82,31 +98,51 @@ class _RecordVenuePageState extends State<RecordVenuePage> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
 
-      final response = await http.post(
-        Uri.parse(ApiConstants.venuesUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'name': _nameController.text,
-          'building': _buildingController.text,
-          'venue_type': _venueType,
-          'latitude': _latitude,
-          'longitude': _longitude,
-          'description': _descriptionController.text,
-        }),
-      );
+      final url = _isEditing 
+          ? '${ApiConstants.venuesUrl}${widget.venue['id']}/'
+          : ApiConstants.venuesUrl;
 
-      if (response.statusCode == 201) {
+      final response = await (_isEditing 
+          ? http.put(
+              Uri.parse(url),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+              body: jsonEncode({
+                'name': _nameController.text,
+                'building': _buildingController.text,
+                'venue_type': _venueType,
+                'latitude': _latitude,
+                'longitude': _longitude,
+                'description': _descriptionController.text,
+              }),
+            )
+          : http.post(
+              Uri.parse(url),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+              body: jsonEncode({
+                'name': _nameController.text,
+                'building': _buildingController.text,
+                'venue_type': _venueType,
+                'latitude': _latitude,
+                'longitude': _longitude,
+                'description': _descriptionController.text,
+              }),
+            ));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Venue recorded successfully!')),
+            SnackBar(content: Text(_isEditing ? 'Venue updated successfully!' : 'Venue recorded successfully!')),
           );
           Navigator.pop(context, true);
         }
       } else {
-        throw 'Failed to record venue: ${response.body}';
+        throw 'Failed to save venue: ${response.body}';
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,7 +160,7 @@ class _RecordVenuePageState extends State<RecordVenuePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 2,
-        title: Text('Record Venue', style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold)),
+        title: Text(_isEditing ? 'Edit Venue' : 'Record Venue', style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold)),
         iconTheme: IconThemeData(color: primaryColor),
       ),
       body: SingleChildScrollView(
@@ -230,7 +266,7 @@ class _RecordVenuePageState extends State<RecordVenuePage> {
                   ),
                   child: _isSubmitting
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Save Venue', style: TextStyle(fontSize: 18)),
+                      : Text(_isEditing ? 'Update Venue' : 'Save Venue', style: const TextStyle(fontSize: 18)),
                 ),
               ),
             ],
